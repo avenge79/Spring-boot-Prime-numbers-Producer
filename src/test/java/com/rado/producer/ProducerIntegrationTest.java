@@ -1,13 +1,12 @@
 package com.rado.producer;
 
 import com.rado.producer.config.ConfigureProperties;
-import com.rado.producer.service.RandomNumbersGeneratorService;
+import com.rado.producer.service.implementation.RandomNumbersGeneratorServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -18,21 +17,17 @@ import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProducerIntegrationTest {
-
-    @LocalServerPort
-    private int port;
-
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private RandomNumbersGeneratorService randomNumbersGeneratorService;
+    private RandomNumbersGeneratorServiceImpl randomNumbersGeneratorServiceImpl;
 
     @Autowired
     ConfigureProperties configureProperties;
 
     @Test
-    public void testProducerGeneratesPrimeNumbers() {
+    void testProducerGeneratesPrimeNumbers() {
         String consumerUrl = configureProperties.getConsumerUrlRest();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -42,7 +37,7 @@ public class ProducerIntegrationTest {
         int totalNumbers = 100;
         // Generate random numbers
         for (int i = 0; i < totalNumbers; i++) {
-            randomNumbers.add(randomNumbersGeneratorService.generateRandomNumber());
+            randomNumbers.add(randomNumbersGeneratorServiceImpl.generateRandomNumber());
         }
 
         HttpEntity<List<Integer>> request = new HttpEntity<>(randomNumbers, headers);
