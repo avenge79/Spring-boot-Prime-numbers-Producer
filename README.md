@@ -1,5 +1,5 @@
 # Spring-boot-Prime-numbers-Producer
-Demo project of Microservices with Spring Boot - Producer app. This app generates random numbers and sends them to Consumer. Generated numbers are saved to CSV file with default path '**/temp**' which can be configured.
+Demo project of Microservices with Spring Boot - Producer app. This app generates random numbers and sends them to Consumer. Generated numbers are saved to CSV file with default path '**/temp/producer**' which can be configured.
 
 ## To run projects from command line, make sure you have Java 11 installed and maven. <br/>
 First build and run my other app - Consumer: https://github.com/avenge79/Spring-boot-Prime-numbers-Consumer.git.<br/>
