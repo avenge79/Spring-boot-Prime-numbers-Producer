@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+csv:
+  file:
+    folder: /temp/producer
+    name: ProducerRandomNumbers.csv
+
+consumer:
+  url:
+    rest: http://localhost:8081/v1/api/random-numbers
+    websocket: ws://localhost:8081/v1/ws
+
+scheduler:
+  milliseconds: 5000
+
+# Generate up to numbers per request
+numbers:
+  per:
+    batch: 5
+
+
+max:
+  # Max value of number generated
+  number: 100
+
+  # Total numbers to be sent
+  stream:
+    size: 100
+
+websocket:
+  use: false

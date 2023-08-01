@@ -1,0 +1,16 @@
+version: "3"
+services:
+  producer:
+    image: producer-app
+    ports:
+      - "8080:8080"
+    networks:
+      - consumer-producer
+    environment:
+      PRODUCER_URL: http://consumer:8081/api/random-numbers
+      PRODUCER_WEBSOCKET_URL: ws://consumer:8081/ws
+      CSV_FILE_FOLDER: /temp
+
+networks:
+  consumer-producer: # Define the custom network
+    external: true
