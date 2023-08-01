@@ -15,10 +15,10 @@ Make sure you have **Docker** installed. Build both projects with **Maven** as d
 **docker network create consumer-producer**<br/>
 Then build Docker image:<br/>
 **docker build -t producer-app -f Dockerfile .**<br/>
-After that, use **docker-compose** to run the image using provided '**docker-compose.yml*'<br/>
+After that, use **docker-compose** to run the image using provided '**docker-compose.yml**'<br/>
 **docker-compose up --detach**<br/>
 <br/>
-The default folder for output CSV files with generated numbers is '**/temp**'. You can change it in '**application.yml**' by changing the property<br/>
+The default folder for output CSV files with generated numbers is '**/temp/producer**'. You can change it in '**application.yml**' by changing the property<br/>
 **csv:
   file:
     folder: /temp/producer**<br/>
