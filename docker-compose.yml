@@ -9,7 +9,7 @@ services:
     environment:
       CONSUMER_URL_REST: http://consumer:8081/v1/api/random-numbers
       CONSUMER_URL_WEBSOCKET: ws://consumer:8081/v1/ws
-      CSV_FILE_FOLDER: /temp
+      CSV_FILE_FOLDER: /temp/producer
       WEBSOCKET_USE: false
 
 networks:
