@@ -7,9 +7,10 @@ services:
     networks:
       - consumer-producer
     environment:
-      PRODUCER_URL: http://consumer:8081/api/random-numbers
-      PRODUCER_WEBSOCKET_URL: ws://consumer:8081/ws
+      CONSUMER_URL_REST: http://consumer:8081/v1/api/random-numbers
+      CONSUMER_URL_WEBSOCKET: ws://consumer:8081/v1/ws
       CSV_FILE_FOLDER: /temp
+      WEBSOCKET_USE: false
 
 networks:
   consumer-producer: # Define the custom network
