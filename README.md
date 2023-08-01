@@ -22,9 +22,7 @@ The default folder for output CSV files with generated numbers is '**/temp**'. Y
 **csv:
   file:
     folder: /temp/producer**<br/>
-The property for file name is '**name:**'. Make sure files are with different names if using common folder for other project - Consumer.<br/>
-Numbers will be appended to files, so make sure if you want clean results to delete files or folder before running 'producer' app.
-If you want to change it for Docker images, change these in **docker-compose.yml**
+Numbers will be appended to the file, so make sure if you want clean results to delete or rename previous files or folder before running the app. If you want to change it for Docker images, change these in **docker-compose.yml**.<br/>
 
 Integration tests can be run with
 **mvn test**
