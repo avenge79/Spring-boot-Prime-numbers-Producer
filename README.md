@@ -1,5 +1,5 @@
 # Spring-boot-Prime-numbers-Producer
-Demo project of Microservices with Spring Boot - Producer app. This app generates random numbers and sends them to Consumer. Generated numbers are saved to CSV file with default path '**/temp/producer**' which can be configured.
+Demo project of Microservices with Spring Boot - Producer app. This app generates random numbers (up to five) every XX seconds and sends them to Consumer. Generated numbers are saved to CSV file with default path '**/temp/producer**' which can be configured.
 
 ## To run projects from command line, make sure you have Java 11 installed and maven. <br/>
 First build and run my other app - Consumer: https://github.com/avenge79/Spring-boot-Prime-numbers-Consumer.git.<br/>
@@ -8,7 +8,10 @@ To build this app, first execute<br/>
 Then go to **'target'** folder and run the project with<br/>
 **java -jar producer-app-1.0.0.jar**<br/>
 <br/>
-Some properties can be configurd inside '**application.yml**' inside '**resources**' folder.<br/>
+You can configure how often numbers are sent to **Consumer** in '**application.yml**' inside '**resources**' folder by changing value<br/>
+scheduler:<br/>
+  milliseconds: 1000<br/>
+which generates and sends numbers every 1000 miliseconds (1 second) by default.<br/>
 
 ## Run with Docker:<br/>
 Make sure you have **Docker** installed. Build both projects with **Maven** as described above. First create a Docker network for both projects:<br/>
