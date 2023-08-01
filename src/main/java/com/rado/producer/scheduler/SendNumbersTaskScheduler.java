@@ -2,9 +2,9 @@ package com.rado.producer.scheduler;
 
 import com.rado.producer.config.ConfigureProperties;
 import com.rado.producer.handler.StompSessionHandler;
-import com.rado.producer.service.implementation.CSVWriterServiceImpl;
-import com.rado.producer.service.implementation.ProducerServiceImpl;
-import com.rado.producer.service.implementation.RandomNumbersGeneratorServiceImpl;
+import com.rado.producer.service.RandomNumbersGeneratorService;
+import com.rado.producer.service.implementation.CSVWriterService;
+import com.rado.producer.service.implementation.ProducerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -23,18 +23,18 @@ import java.util.List;
 public class SendNumbersTaskScheduler {
     private final ThreadPoolTaskScheduler taskScheduler;
     private int generatedNumbersCount = 0;
-    private final ProducerServiceImpl producerServiceImpl;
+    private final ProducerService producerService;
     private final ConfigureProperties configureProperties;
-    private final RandomNumbersGeneratorServiceImpl randomNumbersGeneratorServiceImpl;
-    private final CSVWriterServiceImpl csvWriterServiceImpl;
+    private final RandomNumbersGeneratorService randomNumbersGeneratorService;
+    private final CSVWriterService csvWriterService;
 
     @Autowired
-    public SendNumbersTaskScheduler(ThreadPoolTaskScheduler taskScheduler, ProducerServiceImpl producerServiceImpl, ConfigureProperties configureProperties, RandomNumbersGeneratorServiceImpl randomNumbersGeneratorServiceImpl, CSVWriterServiceImpl csvWriterServiceImpl) {
+    public SendNumbersTaskScheduler(ThreadPoolTaskScheduler taskScheduler, ProducerService producerService, ConfigureProperties configureProperties, RandomNumbersGeneratorService randomNumbersGeneratorService, CSVWriterService csvWriterService) {
         this.taskScheduler = taskScheduler;
-        this.producerServiceImpl = producerServiceImpl;
+        this.producerService = producerService;
         this.configureProperties = configureProperties;
-        this.randomNumbersGeneratorServiceImpl = randomNumbersGeneratorServiceImpl;
-        this.csvWriterServiceImpl = csvWriterServiceImpl;
+        this.randomNumbersGeneratorService = randomNumbersGeneratorService;
+        this.csvWriterService = csvWriterService;
     }
 
     @Scheduled(fixedRateString = "${scheduler.milliseconds}")
@@ -59,17 +59,17 @@ public class SendNumbersTaskScheduler {
             stompClient.connect(configureProperties.getConsumerUrlWebsocket(), sessionHandler);
         } else {
             // Send numbers through REST
-            List<Integer> response = producerServiceImpl.sendRandomNumbersToClient(randomNumbers);
+            List<Integer> response = producerService.sendRandomNumbersToClient(randomNumbers);
             log.info("Returned prime numbers: {}", response);
         }
         // Write numbers to CSV file
-        csvWriterServiceImpl.writeRandomNumbersToCSV(randomNumbers);
+        csvWriterService.writeRandomNumbersToCSV(randomNumbers);
     }
 
     public void generateNumbersList(List<Integer> randomNumbers) {
         for (int i = 0; i < configureProperties.getNumbersPerBatch(); i++) {
-            if (randomNumbersGeneratorServiceImpl.generateBoolean()) {
-                int randomNumber = randomNumbersGeneratorServiceImpl.generateRandomNumber();
+            if (randomNumbersGeneratorService.generateBoolean()) {
+                int randomNumber = randomNumbersGeneratorService.generateRandomNumber();
                 randomNumbers.add(randomNumber);
                 generatedNumbersCount++;
             }
@@ -81,7 +81,7 @@ public class SendNumbersTaskScheduler {
 
         // Make sure there is at least 1 number generated
         if (randomNumbers.isEmpty()) {
-            randomNumbers.add(randomNumbersGeneratorServiceImpl.generateRandomNumber());
+            randomNumbers.add(randomNumbersGeneratorService.generateRandomNumber());
         }
     }
 

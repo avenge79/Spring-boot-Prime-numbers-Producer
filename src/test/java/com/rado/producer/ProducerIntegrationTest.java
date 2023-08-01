@@ -1,7 +1,7 @@
 package com.rado.producer;
 
 import com.rado.producer.config.ConfigureProperties;
-import com.rado.producer.service.implementation.RandomNumbersGeneratorServiceImpl;
+import com.rado.producer.service.implementation.RandomNumbersGeneratorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class ProducerIntegrationTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private RandomNumbersGeneratorServiceImpl randomNumbersGeneratorServiceImpl;
+    private RandomNumbersGeneratorService randomNumbersGeneratorService;
 
     @Autowired
     ConfigureProperties configureProperties;
@@ -37,7 +37,7 @@ public class ProducerIntegrationTest {
         int totalNumbers = 100;
         // Generate random numbers
         for (int i = 0; i < totalNumbers; i++) {
-            randomNumbers.add(randomNumbersGeneratorServiceImpl.generateRandomNumber());
+            randomNumbers.add(randomNumbersGeneratorService.generateRandomNumber());
         }
 
         HttpEntity<List<Integer>> request = new HttpEntity<>(randomNumbers, headers);

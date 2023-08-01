@@ -1,7 +1,6 @@
 package com.rado.producer.service.implementation;
 
 import com.rado.producer.config.ConfigureProperties;
-import com.rado.producer.service.ProducerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -16,12 +15,12 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class ProducerServiceImpl implements ProducerService {
+public class ProducerService implements com.rado.producer.service.ProducerService {
     private final ConfigureProperties configureProperties;
     RestTemplate restTemplate;
 
     @Autowired
-    public ProducerServiceImpl(ConfigureProperties configureProperties, RestTemplate restTemplate) {
+    public ProducerService(ConfigureProperties configureProperties, RestTemplate restTemplate) {
         this.configureProperties = configureProperties;
         this.restTemplate = restTemplate;
     }
