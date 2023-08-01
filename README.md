@@ -35,4 +35,4 @@ to '**true**' in '**docker-compose.yml*'.<br/>
 
 Integration tests can be run with<br/>
 **mvn test**<br/>
-Make sure '**consumer**' is running.
+Make sure '**consumer**' is running and you have rights to create and write to folder '**/temp**' or change it inside the config file as described above.
