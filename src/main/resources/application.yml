@@ -12,7 +12,7 @@ consumer:
     websocket: ws://localhost:8081/v1/ws
 
 scheduler:
-  milliseconds: 5000
+  milliseconds: 1000
 
 # Generate up to numbers per request
 numbers:
