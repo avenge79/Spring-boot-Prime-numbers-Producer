@@ -3,7 +3,7 @@ Demo project of Microservices with Spring Boot - Producer app. This app generate
 
 ## To run projects from command line, make sure you have Java 11 installed and maven. <br/>
 First build and run my other app - Consumer: https://github.com/avenge79/Spring-boot-Prime-numbers-Consumer.git.<br/>
-To build this app, first execute
+To build this app, first execute<br/>
 **mvn clean install**<br/>
 Then go to **'target'** folder and run the project with<br/>
 **java -jar producer-app-1.0.0.jar**<br/>
