@@ -1,4 +1,4 @@
-package com.rado.producer;
+package com.rado.producer.dto;
 
 import lombok.Getter;
 import lombok.Setter;
