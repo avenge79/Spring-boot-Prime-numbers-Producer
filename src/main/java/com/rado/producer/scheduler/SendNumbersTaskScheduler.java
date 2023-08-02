@@ -1,7 +1,7 @@
 package com.rado.producer.scheduler;
 
-import com.rado.producer.ProducerDTO;
 import com.rado.producer.config.ConfigureProperties;
+import com.rado.producer.dto.ProducerDTO;
 import com.rado.producer.handler.StompSessionHandler;
 import com.rado.producer.service.CSVWriterService;
 import com.rado.producer.service.ProducerService;

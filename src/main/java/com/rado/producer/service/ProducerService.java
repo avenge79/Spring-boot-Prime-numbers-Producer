@@ -1,6 +1,7 @@
 package com.rado.producer.service;
 
-import com.rado.producer.ProducerDTO;
+
+import com.rado.producer.dto.ProducerDTO;
 
 import java.util.List;
 

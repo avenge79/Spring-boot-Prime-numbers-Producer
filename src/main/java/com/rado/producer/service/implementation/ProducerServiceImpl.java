@@ -1,7 +1,7 @@
 package com.rado.producer.service.implementation;
 
-import com.rado.producer.ProducerDTO;
 import com.rado.producer.config.ConfigureProperties;
+import com.rado.producer.dto.ProducerDTO;
 import com.rado.producer.service.ProducerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service

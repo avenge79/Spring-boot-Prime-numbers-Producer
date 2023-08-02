@@ -33,13 +33,13 @@ public class StompSessionHandler extends StompSessionHandlerAdapter {
 
     @Override
     public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-        log.error("Exception: {}", exception);
+        log.error("Exception: {}", exception.getMessage());
         connectionError = true;
     }
 
     @Override
     public void handleTransportError(StompSession session, Throwable exception) {
-        log.warn("Error on websocket session {}, {}", session.getSessionId(), exception);
+        log.error("Error on websocket session {}, {}", session.getSessionId(), exception.getMessage());
         connectionError = true;
     }
 
