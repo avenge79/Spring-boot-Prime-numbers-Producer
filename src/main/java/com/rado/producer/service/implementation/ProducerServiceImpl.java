@@ -1,6 +1,8 @@
 package com.rado.producer.service.implementation;
 
+import com.rado.producer.ProducerDTO;
 import com.rado.producer.config.ConfigureProperties;
+import com.rado.producer.service.ProducerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -15,30 +17,35 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class ProducerService implements com.rado.producer.service.ProducerService {
+public class ProducerServiceImpl implements ProducerService {
     private final ConfigureProperties configureProperties;
     RestTemplate restTemplate;
 
     @Autowired
-    public ProducerService(ConfigureProperties configureProperties, RestTemplate restTemplate) {
+    public ProducerServiceImpl(ConfigureProperties configureProperties, RestTemplate restTemplate) {
         this.configureProperties = configureProperties;
         this.restTemplate = restTemplate;
     }
 
-    public List<Integer> sendRandomNumbersToClient(List<Integer> randomNumbers) {
+    public ProducerDTO sendRandomNumbersToClient(List<Integer> randomNumbers) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<List<Integer>> request = new HttpEntity<>(randomNumbers, headers);
-        ResponseEntity<List> response = null;
+        ResponseEntity<List> primeNumbersList = null;
+        ProducerDTO consumerResponse = new ProducerDTO();
 
         try {
-            response = restTemplate.postForEntity(configureProperties.getConsumerUrlRest(), request, List.class);
-            log.info("Http Response: {}", response);
+            primeNumbersList = restTemplate.postForEntity(configureProperties.getConsumerUrlRest(), request, List.class);
+            log.info("Http Response: {}", consumerResponse);
         } catch (Exception e) {
-            log.error("ProducerService error: {}", e.getMessage());
-            return Collections.emptyList();
+            String error = "ProducerService error: ";
+            log.error(error + e.getMessage());
+            consumerResponse.setError(error + e.getMessage());
+            return consumerResponse;
         }
 
-        return response.getBody();
+        consumerResponse.setPrimeNumbers(primeNumbersList.getBody());
+
+        return consumerResponse;
     }
 }

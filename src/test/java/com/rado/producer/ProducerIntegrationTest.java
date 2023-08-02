@@ -1,7 +1,7 @@
 package com.rado.producer;
 
 import com.rado.producer.config.ConfigureProperties;
-import com.rado.producer.service.implementation.RandomNumbersGeneratorService;
+import com.rado.producer.service.RandomNumbersGeneratorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

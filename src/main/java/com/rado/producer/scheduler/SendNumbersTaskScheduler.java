@@ -1,10 +1,11 @@
 package com.rado.producer.scheduler;
 
+import com.rado.producer.ProducerDTO;
 import com.rado.producer.config.ConfigureProperties;
 import com.rado.producer.handler.StompSessionHandler;
+import com.rado.producer.service.CSVWriterService;
+import com.rado.producer.service.ProducerService;
 import com.rado.producer.service.RandomNumbersGeneratorService;
-import com.rado.producer.service.implementation.CSVWriterService;
-import com.rado.producer.service.implementation.ProducerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -55,13 +56,24 @@ public class SendNumbersTaskScheduler {
             WebSocketClient client = new StandardWebSocketClient();
             WebSocketStompClient stompClient = new WebSocketStompClient(client);
             stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-            org.springframework.messaging.simp.stomp.StompSessionHandler sessionHandler = new StompSessionHandler(randomNumbers);
+            StompSessionHandler sessionHandler = new StompSessionHandler(randomNumbers);
+            if (StompSessionHandler.connectionError) {
+                log.error("Error connecting to Consumer Websocket endpoint, is it running?");
+                stopScheduler();
+            }
+
             stompClient.connect(configureProperties.getConsumerUrlWebsocket(), sessionHandler);
         } else {
             // Send numbers through REST
-            List<Integer> response = producerService.sendRandomNumbersToClient(randomNumbers);
-            log.info("Returned prime numbers: {}", response);
+            ProducerDTO producerResponse = producerService.sendRandomNumbersToClient(randomNumbers);
+            if (producerResponse.getError() != null && !producerResponse.getError().isEmpty()) {
+                log.error("Error from Consumer, is it running?");
+                stopScheduler();
+            }
+            log.info("Returned prime numbers: {}", producerResponse.getPrimeNumbers());
+
         }
+
         // Write numbers to CSV file
         csvWriterService.writeRandomNumbersToCSV(randomNumbers);
     }

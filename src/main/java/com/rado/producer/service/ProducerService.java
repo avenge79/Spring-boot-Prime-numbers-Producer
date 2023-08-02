@@ -1,7 +1,9 @@
 package com.rado.producer.service;
 
+import com.rado.producer.ProducerDTO;
+
 import java.util.List;
 
 public interface ProducerService {
-    List<Integer> sendRandomNumbersToClient(List<Integer> randomNumbers);
+    ProducerDTO sendRandomNumbersToClient(List<Integer> randomNumbers);
 }

@@ -15,6 +15,7 @@ import static com.rado.producer.handler.MappingConstants.SEND_TO_MAPPING;
 @Slf4j
 public class StompSessionHandler extends StompSessionHandlerAdapter {
     private final List<Integer> message;
+    public static boolean connectionError = false;
 
     public StompSessionHandler(List<Integer> message) {
         this.message = message;
@@ -33,11 +34,13 @@ public class StompSessionHandler extends StompSessionHandlerAdapter {
     @Override
     public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
         log.error("Exception: {}", exception);
+        connectionError = true;
     }
 
     @Override
     public void handleTransportError(StompSession session, Throwable exception) {
-        log.warn("Error on websocket session {}", session.getSessionId(), exception);
+        log.warn("Error on websocket session {}, {}", session.getSessionId(), exception);
+        connectionError = true;
     }
 
     @Override
