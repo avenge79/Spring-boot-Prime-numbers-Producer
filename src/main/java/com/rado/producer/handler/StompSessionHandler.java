@@ -10,7 +10,6 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import static com.rado.producer.handler.MappingConstants.MESSAGE_MAPPING;
-import static com.rado.producer.handler.MappingConstants.SEND_TO_MAPPING;
 
 @Slf4j
 public class StompSessionHandler extends StompSessionHandlerAdapter {
@@ -24,8 +23,6 @@ public class StompSessionHandler extends StompSessionHandlerAdapter {
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
         log.info("New STOMP session : {}", session.getSessionId());
-        session.subscribe(SEND_TO_MAPPING, this);
-        log.info("Subscribed to: {}", SEND_TO_MAPPING);
 
         session.send(MESSAGE_MAPPING, message);
         log.info("Message sent to websocket server");
