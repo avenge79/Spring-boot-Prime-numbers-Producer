@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rado.producer.config.ConfigureProperties;
 import com.rado.producer.dto.ProducerDTO;
 import com.rado.producer.handler.StompSessionHandler;
-import com.rado.producer.model.NumberMessage;
+import com.rado.producer.dto.model.NumberMessage;
 import com.rado.producer.service.CSVWriterService;
 import com.rado.producer.service.ProducerService;
 import com.rado.producer.service.RandomNumbersGeneratorService;

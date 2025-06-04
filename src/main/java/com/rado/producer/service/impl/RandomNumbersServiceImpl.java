@@ -35,5 +35,4 @@ public class RandomNumbersServiceImpl implements RandomNumbersService {
 
         return randomNumbers;
     }
-
 }

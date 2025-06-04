@@ -1,6 +1,6 @@
 package com.rado.producer.handler;
 
-import com.rado.producer.model.NumberMessage;
+import com.rado.producer.dto.model.NumberMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -8,7 +8,6 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
 import static com.rado.producer.handler.MappingConstants.MESSAGE_MAPPING;
 
