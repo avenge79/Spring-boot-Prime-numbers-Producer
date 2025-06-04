@@ -1,13 +1,16 @@
 package com.rado.producer.scheduler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rado.producer.config.ConfigureProperties;
 import com.rado.producer.dto.ProducerDTO;
 import com.rado.producer.handler.StompSessionHandler;
+import com.rado.producer.model.NumberMessage;
 import com.rado.producer.service.CSVWriterService;
 import com.rado.producer.service.ProducerService;
 import com.rado.producer.service.RandomNumbersGeneratorService;
+import com.rado.producer.service.WebSocketService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -21,64 +24,70 @@ import java.util.List;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class SendNumbersTaskScheduler {
     private final ThreadPoolTaskScheduler taskScheduler;
-    private int generatedNumbersCount = 0;
+    private int generatedNumbersCount;
     private final ProducerService producerService;
     private final ConfigureProperties configureProperties;
     private final RandomNumbersGeneratorService randomNumbersGeneratorService;
     private final CSVWriterService csvWriterService;
-
-    @Autowired
-    public SendNumbersTaskScheduler(ThreadPoolTaskScheduler taskScheduler, ProducerService producerService, ConfigureProperties configureProperties, RandomNumbersGeneratorService randomNumbersGeneratorService, CSVWriterService csvWriterService) {
-        this.taskScheduler = taskScheduler;
-        this.producerService = producerService;
-        this.configureProperties = configureProperties;
-        this.randomNumbersGeneratorService = randomNumbersGeneratorService;
-        this.csvWriterService = csvWriterService;
-    }
+    private final WebSocketService webSocketService;
 
     @Scheduled(fixedRateString = "${scheduler.milliseconds}")
-    public void generateAndSendNumbers() {
+    public void generateAndSendNumbers() throws JsonProcessingException {
         if (generatedNumbersCount >= configureProperties.getMaxStreamSize()) {
             log.info("Generation limit reached: {}", generatedNumbersCount);
             stopScheduler();
             return;
         }
 
-        List<Integer> randomNumbers = new ArrayList<>();
-
-        generateNumbersList(randomNumbers);
+        List<Integer> randomNumbers = generateNumbersList();
         log.info("Random numbers: {}, total generated: {}", randomNumbers, generatedNumbersCount);
 
         if (configureProperties.isUseWebsocket()) {
-            // Send numbers through WebSocket
-            WebSocketClient client = new StandardWebSocketClient();
-            WebSocketStompClient stompClient = new WebSocketStompClient(client);
-            stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-            StompSessionHandler sessionHandler = new StompSessionHandler(randomNumbers);
-            if (StompSessionHandler.connectionError) {
-                log.error("Error connecting to Consumer Websocket endpoint, is it running?");
-                stopScheduler();
-            }
-
-            stompClient.connect(configureProperties.getConsumerUrlWebsocket(), sessionHandler);
+            webSocketService.sendNumbersViaWebSocket(randomNumbers);
         } else {
-            // Send numbers through REST
             ProducerDTO producerResponse = producerService.sendRandomNumbersToClient(randomNumbers);
             if (producerResponse.getError() != null && !producerResponse.getError().isEmpty()) {
                 log.error("Error from Consumer, is it running?");
                 stopScheduler();
             }
-            log.info("Returned prime numbers: {}", producerResponse.getPrimeNumbers());
-
+            log.info("Returned prime numbers: {}", producerResponse.getMessage().getNumbers());
         }
 
-        // Write numbers to CSV file
         csvWriterService.writeRandomNumbersToCSV(randomNumbers);
     }
 
-    public void generateNumbersList(List<Integer> randomNumbers) {
+
+    private void sendWebSocketMessage() {
+        List<Integer> randomNumbers = new ArrayList<>();
+        WebSocketClient client = new StandardWebSocketClient();
+        WebSocketStompClient stompClient = new WebSocketStompClient(client);
+        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+
+        NumberMessage message = new NumberMessage();
+        message.setNumbers(randomNumbers);
+
+        StompSessionHandler sessionHandler = new StompSessionHandler(message);
+        if (StompSessionHandler.connectionError) {
+            log.error("Error connecting to Consumer Websocket endpoint, is it running?");
+            stopScheduler();
+        }
+
+        stompClient.connectAsync(configureProperties.getConsumerUrlWebsocket(), sessionHandler)
+                .thenAccept(session ->
+                        log.info("Connected to WebSocket server with session ID: {}",
+                                session.getSessionId()))
+                .exceptionally(ex -> {
+                    log.error("WebSocket connection failed: {}", ex.getMessage());
+                    stopScheduler();
+                    return null;
+                });
+    }
+
+    public List<Integer> generateNumbersList() {
+        List<Integer> randomNumbers = new ArrayList<>();
         for (int i = 0; i < configureProperties.getNumbersPerBatch(); i++) {
             if (randomNumbersGeneratorService.generateBoolean()) {
                 int randomNumber = randomNumbersGeneratorService.generateRandomNumber();
@@ -95,6 +104,7 @@ public class SendNumbersTaskScheduler {
         if (randomNumbers.isEmpty()) {
             randomNumbers.add(randomNumbersGeneratorService.generateRandomNumber());
         }
+        return randomNumbers;
     }
 
     public void stopScheduler() {
