@@ -1,5 +1,6 @@
 package com.rado.producer.handler;
 
+import com.rado.producer.model.NumberMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -13,10 +14,10 @@ import static com.rado.producer.handler.MappingConstants.MESSAGE_MAPPING;
 
 @Slf4j
 public class StompSessionHandler extends StompSessionHandlerAdapter {
-    private final List<Integer> message;
+    private final NumberMessage message;
     public static boolean connectionError = false;
 
-    public StompSessionHandler(List<Integer> message) {
+    public StompSessionHandler(NumberMessage message) {
         this.message = message;
     }
 
@@ -42,6 +43,6 @@ public class StompSessionHandler extends StompSessionHandlerAdapter {
 
     @Override
     public Type getPayloadType(StompHeaders headers) {
-        return String.class;
+        return NumberMessage.class;
     }
 }

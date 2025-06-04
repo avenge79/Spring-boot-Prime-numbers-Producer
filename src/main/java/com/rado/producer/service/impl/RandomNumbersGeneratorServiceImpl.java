@@ -1,4 +1,4 @@
-package com.rado.producer.service.implementation;
+package com.rado.producer.service.impl;
 
 import com.rado.producer.config.ConfigureProperties;
 import com.rado.producer.service.RandomNumbersGeneratorService;
