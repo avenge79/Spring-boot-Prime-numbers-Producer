@@ -1,10 +1,8 @@
 package com.rado.producer.dto;
 
-import com.rado.producer.model.NumberMessage;
+import com.rado.producer.dto.model.NumberMessage;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter

@@ -2,7 +2,7 @@ package com.rado.producer.service.impl;
 
 import com.rado.producer.config.ConfigureProperties;
 import com.rado.producer.handler.StompSessionHandler;
-import com.rado.producer.model.NumberMessage;
+import com.rado.producer.dto.model.NumberMessage;
 import com.rado.producer.service.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
